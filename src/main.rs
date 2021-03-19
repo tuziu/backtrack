@@ -1,16 +1,31 @@
 type EnTy = i32;
 
+struct StateVal{
+    x: usize,
+    y: usize,
+}
+
+impl StateVal{
+    fn new(x: usize,y: usize) -> StateVal{
+        StateVal{x,y}
+    }
+}
+
+type VarDetails = StateVal;
+
 struct Variable {
     domain: Vec<EnTy>,
+    state: VarDetails,
 }
 
 impl Variable {
     fn get_domain(&self) -> &Vec<EnTy> {
         &self.domain
     }
-    fn new(size: usize) -> Variable {
+    fn new(x: usize,y: usize) -> Variable {
         Variable {
-            domain: (0..size).map(|i| i as EnTy).collect(),
+            domain: (0..9).map(|i| i as EnTy).collect(),
+            state: StateVal::new(x, y),
         }
     }
 }
@@ -23,9 +38,9 @@ impl Mill {
     fn get_variable(&self, pos: usize) -> &Variable {
         &self.variables[pos]
     }
-    pub fn new(size: usize) -> Mill {
+    pub fn new() -> Mill {
         Mill {
-            variables: (0..size).map(|_| Variable::new(size)).collect(),
+            variables: (0..81).map(|i| Variable::new(i%9,i/9)).collect(),
         }
     }
     fn get_domain(&self, pos: usize) -> &Vec<EnTy> {
@@ -91,7 +106,7 @@ fn print_solution(partial: &Vec<Option<EnTy>>) {
 }
 
 fn main() {
-    let mut mill = Mill::new(30);
+    let mut mill = Mill::new();
     let a = allocate(&mut mill);
 }
 
