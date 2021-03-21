@@ -7,11 +7,14 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+log = "0.4"
+fern = "0.5"
+chrono = "0.4"
 
 [lib]
 name = "mylib"
 path = "src/lib.rs"
 
 [[bin]]
-name = "mybin"
+name = "backtrack"
 path = "src/main.rs"

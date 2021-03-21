@@ -1,8 +1,12 @@
-use std::cell::Cell;
+use std::{borrow::BorrowMut, cell::Cell};
 
 use crate::sudoku::is_valid;
 
 pub type EnTy = i32;
+
+// #[macro_use]
+// extern crate log;
+use log::{info, trace, warn};
 
 pub struct StateVal {
     x: usize,
@@ -55,6 +59,10 @@ impl Variable {
     pub fn get_partial(&self) -> Option<EnTy> {
         self.partial.get()
     }
+
+    pub fn set_domain_value(&mut self, val: EnTy){
+        self.domain = vec![val];
+    }
 }
 
 pub struct Mill {
@@ -76,11 +84,28 @@ impl Mill {
     pub fn get_domain(&self, pos: usize) -> &Vec<EnTy> {
         self.variables[pos].get_domain()
     }
+
+    pub fn apply_unary(&mut self,v : &Vec<(usize,usize,EnTy)>){
+        for i in v{
+            let j = i.0 + i.1 *9;
+            self.variables[j].borrow_mut().set_domain_value(i.2 - 1 );
+        }
+    }
+}
+
+fn printState(mill: &Mill, pos: usize){
+    let mut s = String::new();
+    for i in &mill.variables[0..pos]{
+        let t = format!("{} ", i.get_partial().unwrap_or(99));
+        s.push_str(&t.to_owned());
+    }
+    info!("allocatin {} ", s);
 }
 
 fn check(mill: &Mill, val: EnTy, pos: usize) -> bool {
     let current = &mill.variables[pos];
     for i in 0..pos {
+        printState(mill, pos);
         if let Some(v) = mill.variables[i].get_partial() {
             let local = &mill.variables[i];
             if is_valid(current, local, val, v) {
