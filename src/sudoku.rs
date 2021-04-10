@@ -1,13 +1,27 @@
-use crate::algo::EnTy;
-use crate::algo::StateVal;
-use crate::algo::Variable;
+use crate::grinder::var_des::VarDes;
+use crate::grinder::variable::EnTy;
 
-pub fn is_valid(e: &Variable, s: &Variable, v2: EnTy, s2: EnTy) -> bool {
-    let v1 = e.get_state();
-    let s1 = s.get_state();
-    (v1.get_x() == s1.get_x()) != (v1.get_y() == s1.get_y()) && v2 == s2
+pub struct SudokuVar {
+    x: usize,
+    y: usize,
 }
 
-pub fn print_row(solution: &Vec<Variable>){
-    
+impl SudokuVar {
+    pub fn new(x: usize, y: usize) -> SudokuVar {
+        SudokuVar { x, y }
+    }
+    pub fn get_x(&self) -> usize {
+        self.x
+    }
+    pub fn get_y(&self) -> usize {
+        self.y
+    }
+}
+
+impl VarDes for SudokuVar {
+
+
+    fn is_valid(&self, other: &Self, current: i32, checked: i32) -> bool {
+        (self.get_x() == other.get_x()) != (self.get_y() == other.get_y()) && current == checked
+    }
 }

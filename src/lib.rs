@@ -1,2 +1,2 @@
 pub mod sudoku;
-pub mod algo;
+pub mod grinder;
