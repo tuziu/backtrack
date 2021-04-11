@@ -10,11 +10,12 @@ pub struct Variable<T> {
 }
 
 impl<T> Variable<T> {
-    pub fn get_domain(&self) -> &Vec<EnTy> {
+    pub fn get_domain(&self) -> &[EnTy] {
         &self.domain
     }
     pub fn new(t: T, d: Vec<EnTy>) -> Variable<T> {
         Variable {
+            // count: Cell::new(d.len()),
             domain: d,
             partial: Cell::new(None),
             state: t,
@@ -35,6 +36,10 @@ impl<T> Variable<T> {
 
     pub fn get_partial(&self) -> Option<EnTy> {
         self.partial.get()
+    }
+
+    pub fn remove(&self, value: EnTy) -> Option<usize>{
+        None
     }
 
     // pub fn set_domain_value(&mut self, val: EnTy){

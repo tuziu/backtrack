@@ -15,7 +15,7 @@ impl<T> ConfigTank<T> {
         &self.variables
     }
 
-    pub fn get_domain(&self, pos: usize) -> &Vec<EnTy> {
+    pub fn get_domain(&self, pos: usize) -> &[EnTy] {
         self.variables[pos].get_domain()
     }
 
