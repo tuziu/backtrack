@@ -1,29 +1,29 @@
-use std::cell::Cell;
+use std::cell::{Cell, RefCell};
+
+use crate::grinder::swap_container::SwapContainer;
 
 pub type EnTy = i32;
 
-// #[derive(Copy)]
 pub struct Variable<T> {
-    domain: Vec<EnTy>,
     partial: Cell<Option<EnTy>>,
     state: T,
+    domain2: RefCell<SwapContainer>,
 }
 
 impl<T> Variable<T> {
-    pub fn get_domain(&self) -> &[EnTy] {
-        &self.domain
-    }
     pub fn new(t: T, d: Vec<EnTy>) -> Variable<T> {
         Variable {
-            // count: Cell::new(d.len()),
-            domain: d,
             partial: Cell::new(None),
             state: t,
+            domain2: RefCell::new(SwapContainer::new(d)),
         }
     }
 
     pub fn get_state(&self) -> &T {
         &self.state
+    }
+    pub fn get_domain(&self) -> &[EnTy] {
+        self.domain2.borrow().get_slice()
     }
 
     pub fn set_partial(&self, partial: EnTy) {
@@ -38,7 +38,7 @@ impl<T> Variable<T> {
         self.partial.get()
     }
 
-    pub fn remove(&self, value: EnTy) -> Option<usize>{
+    pub fn remove(&self, _value: EnTy) -> Option<usize> {
         None
     }
 

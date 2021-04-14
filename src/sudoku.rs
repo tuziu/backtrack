@@ -21,7 +21,7 @@ impl SudokuVar {
 impl VarDes for SudokuVar {
 
 
-    fn is_valid(&self, other: &Self, current: i32, checked: i32) -> bool {
+    fn is_valid(&self, other: &Self, current: EnTy, checked: EnTy) -> bool {
         (self.get_x() == other.get_x()) != (self.get_y() == other.get_y()) && current == checked
     }
 }

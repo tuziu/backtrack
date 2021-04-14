@@ -55,6 +55,6 @@ mod tests {
     #[test]
     fn llll() {
         let mut t: ConfigTankBuilder<i32> = ConfigTankBuilder::new();
-        let a = add_variable(1).with_domain(Vec::new()).to(&mut t);
+        let _a = add_variable(1).with_domain(Vec::new()).to(&mut t);
     }
 }
