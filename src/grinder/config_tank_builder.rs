@@ -1,11 +1,11 @@
 use crate::grinder::variable::Variable;
 use crate::grinder::{config_tank::ConfigTank, variable::EnTy};
 
-pub struct ConfigTankBuilder<T> {
+pub struct ConfigTankBuilder<T: Copy> {
     vars: Vec<(T, Vec<EnTy>)>,
 }
 
-impl<T> ConfigTankBuilder<T> {
+impl<T: Copy> ConfigTankBuilder<T> {
     pub fn new() -> ConfigTankBuilder<T> {
         ConfigTankBuilder { vars: Vec::new() }
     }
@@ -15,34 +15,34 @@ impl<T> ConfigTankBuilder<T> {
     }
 
     pub fn finalize(&mut self) -> ConfigTank<T> {
-        let vars = self
-            .vars
-            .drain(..)
-            .map(|(t, d)| Variable::new(t, d))
-            .collect();
+        let mut vars = Vec::new();
+
+        for (i, (t, d)) in self.vars.iter().enumerate() {
+            vars.push(Variable::new(*t, d.clone(), i));
+        }
         ConfigTank::new(vars)
     }
 }
 
-pub struct VarBuilder<T> {
+pub struct VarBuilder<T: Copy> {
     t: T,
 }
 
-pub fn add_variable<T>(var: T) -> VarBuilder<T> {
+pub fn add_variable<T: Copy>(var: T) -> VarBuilder<T> {
     VarBuilder { t: var }
 }
 
-impl<T> VarBuilder<T> {
+impl<T: Copy> VarBuilder<T> {
     pub fn with_domain(self, d: Vec<EnTy>) -> DomainBuilder<T> {
         DomainBuilder { t: self.t, d: d }
     }
 }
-pub struct DomainBuilder<T> {
+pub struct DomainBuilder<T: Copy> {
     t: T,
     d: Vec<EnTy>,
 }
 
-impl<T> DomainBuilder<T> {
+impl<T: Copy> DomainBuilder<T> {
     pub fn to(self, cb: &mut ConfigTankBuilder<T>) {
         cb.add_variable(self.t, self.d)
     }

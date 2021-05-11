@@ -1,6 +1,7 @@
 use crate::grinder::var_des::VarDes;
 use crate::grinder::variable::EnTy;
 
+#[derive( Copy,Clone)]
 pub struct SudokuVar {
     x: usize,
     y: usize,

@@ -1,7 +1,8 @@
-use crate::grinder::variable::{EnTy, Variable};
+use crate::grinder::{domain::Domain, variable::{Variable}};
 
 pub struct ConfigTank<T> {
     variables: Vec<Variable<T>>,
+    // domains
 }
 
 impl<T> ConfigTank<T> {
@@ -15,8 +16,8 @@ impl<T> ConfigTank<T> {
         &self.variables
     }
 
-    pub fn get_domain(&self, pos: usize) -> &[EnTy] {
-        self.variables[pos].get_domain()
+    pub fn get_domain(&self, pos: usize) -> &Domain {
+        &self.variables[pos].get_domain()
     }
 
     // pub fn apply_unary(&mut self,v : &Vec<(usize,usize,EnTy)>){

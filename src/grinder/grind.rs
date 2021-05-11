@@ -1,15 +1,23 @@
-use std::collections::VecDeque;
+use std::collections::{HashMap, VecDeque};
 
-use crate::grinder::{var_des::VarDes, variable::Variable};
-use crate::grinder::{config_tank::ConfigTank, variable::EnTy};
+use crate::grinder::{config_tank::ConfigTank, domain::Domain, var_des::VarDes, variable::EnTy};
+use crate::grinder::{
+    variable::{VarId, Variable},
+};
 
-fn check<T: VarDes>(ct: &ConfigTank<T>, val: EnTy, pos: usize) -> bool {
+// fn check<T: VarDes>(ct: &ConfigTank<T>, val: EnTy, pos: usize) -> bool {
+fn check<T: VarDes>(
+    ct: &ConfigTank<T>,
+    val: EnTy,
+    pos: usize,
+    partials: &mut HashMap<VarId, EnTy>,
+) -> bool {
     let current = ct.get_variable(pos);
     for i in 0..pos {
         // printState(mill, pos);
         let local = ct.get_variable(i);
-        if let Some(v) = local.get_partial() {
-            let l = current.get_state().is_valid(local.get_state(), val, v);
+        if let Some(v) = partials.get(&i) {
+            let l = current.get_state().is_valid(local.get_state(), val, *v);
             if l {
                 return false;
             }
@@ -18,51 +26,29 @@ fn check<T: VarDes>(ct: &ConfigTank<T>, val: EnTy, pos: usize) -> bool {
     true
 }
 
-pub fn allocate<T: VarDes>(ct: &ConfigTank<T>) -> bool {
-    allocate_at(ct, 0)
-}
-
-fn allocate_at<T: VarDes>(ct: &ConfigTank<T>, pos: usize) -> bool {
-    if pos == ct.get_variables().len() {
-        return true;
-    }
-
-    for i in ct.get_domain(pos) {
-        ct.get_variable(pos).set_partial(*i);
-        if check(ct, *i, pos) && allocate_at(ct, pos + 1) {
-            return true;
-        }
-        ct.get_variable(pos).reset_partial();
-    }
+pub fn allocate<T: VarDes>(_ct: &ConfigTank<T>) -> bool {
+    // allocate_at(ct, 0)
     false
 }
 
-// fn revise<T : VarDes>(ct: &ConfigTank<T>, vi: usize, vj: usize) -> bool {
-//     let mut di = self.variables[vi];
-//     let mut dj = self.variables[vj];
-//     let mut toDelete = Vec::new();
-//     for i in di.getDomain() {
-//         if dj.getDomain().iter().all(|j| !Mill::checkConstraint(i, *j)) {
-//             toDelete.push(i);
-//         }
-//     }
-//     if !toDelete.is_empty() {
-//         toDelete.iter().for_each(|v| { di.remove(*v); });
-//         return true;
-//     }
-//     false
-// }
-fn revise<T : VarDes>(vi: &Variable<T>, vj: &Variable<T>) -> bool {
-    let mut to_delete = Vec::new();
-    for i in vi.get_domain() {
-        if vj.get_domain().iter().all(|j| !vi.get_state().is_valid(vj.get_state(), *i, *j)) {
-            to_delete.push(i);
-        }
-    }
-    if !to_delete.is_empty() {
-        to_delete.into_iter().for_each(|v| {vi.remove(*v); });
-        return true;
-    }
+fn allocate_at<T: VarDes>(
+    ct: &ConfigTank<T>,
+    partials: &mut HashMap<VarId, EnTy>,
+    current_id: VarId,
+    domains: &Vec<Domain>,
+) -> bool {
+    // if current_id == ct.get_variables().len() {
+    //     return true;
+    // }
+    // domains[current_id].iter().any(|i| {
+    //     partials.insert(current_id, *i);
+    //     if check(ct, *i, current_id, partials) && allocate_at(ct, partials, current_id + 1, domains)
+    //     {
+    //         return true;
+    //     }
+    //     partials.remove(&current_id);
+    //     false
+    // })
     false
 }
 
@@ -73,17 +59,17 @@ fn generate(qeue: &mut VecDeque<(usize, usize)>, from: usize, to: usize) {
     }
 }
 
-fn arc_consistency<T: VarDes>(ct: &ConfigTank<T>, pos: usize) -> bool {
-    let mut q = VecDeque::new();
-    generate(&mut q,pos, ct.get_variables().len());
-    while let Some((vk, vm)) = q.pop_front() {
-        if revise(ct.get_variable(vk), ct.get_variable(vm)) {
-            if ct.get_domain(vk).is_empty() {
-                return false;
-            } else {
-                generate(&mut q,vk, ct.get_variables().len());
-            }
-        }
-    }
-    true
-}
+// fn arc_consistency<T: VarDes>(ct: &ConfigTank<T>, pos: usize) -> bool {
+//     let mut q = VecDeque::new();
+//     generate(&mut q, pos, ct.get_variables().len());
+//     while let Some((vk, vm)) = q.pop_front() {
+//         if revise(ct.get_variable(vk), ct.get_variable(vm)) {
+//             if ct.get_domain(vk).is_empty() {
+//                 return false;
+//             } else {
+//                 generate(&mut q, vk, ct.get_variables().len());
+//             }
+//         }
+//     }
+//     true
+// }

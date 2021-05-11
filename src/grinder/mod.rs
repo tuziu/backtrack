@@ -4,3 +4,4 @@ pub mod grind;
 pub mod var_des;
 pub mod variable;
 pub mod swap_container;
+pub mod domain;

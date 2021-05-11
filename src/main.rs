@@ -12,9 +12,10 @@ use mylib::{
 extern crate log;
 
 fn ele_to_str(e: (usize, &Variable<SudokuVar>)) -> String {
-    let a = e.1.get_partial().unwrap();
-    let z = if (e.0 + 1) % 9 != 0 { "" } else { "\n" };
-    format!("| {}  | {}", a, z)
+    // let a = e.1.get_partial().unwrap();
+    // let z = if (e.0 + 1) % 9 != 0 { "" } else { "\n" };
+    // format!("| {}  | {}", a, z)
+    String::new()
 }
 
 fn print_solution(partial: &Vec<Variable<SudokuVar>>) {
