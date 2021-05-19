@@ -69,7 +69,7 @@ impl SwapContainer {
     {
         let mut to_delete = Vec::new();
         for (pos, i) in self.iter().enumerate() {
-            if other.iter().any(|j| f(i, j)) {
+            if !other.iter().any(|j| f(i, j)) {
                 to_delete.push(pos);
             }
         }
@@ -137,13 +137,21 @@ mod tests {
 
     }
 
-    // #[test]
-    // fn revise_1() {
-    //     let a = vec![2, 7, 6, 12, 11, 101, 77];
-    //     let mut n = SwapContainer::new(a);
-    //     let i = n.revise(&[2,3],|x,y| (x != y) );
-    //     let t2: Vec<Ty> = n.iter().map(|x| *x).collect();
-    //     assert_eq!(t2,[2,7,11,101,77]);
+    #[test]
+    fn revise_1() {
+        let a = vec![2, 7, 6, 12, 11, 101, 77];
+        let mut n = SwapContainer::new(a);
+        let i = n.revise(&[0,3],|x,y| x != y );
+        let t2: Vec<Ty> = n.iter().map(|x| *x).collect();
+        assert_eq!(t2,[2, 7, 6, 12, 11, 101, 77]);
+    }
 
-    // }
+    #[test]
+    fn revise_2() {
+        let a = vec![2, 7, 6, 12, 11, 101, 77];
+        let mut n = SwapContainer::new(a);
+        let i = n.revise(&[2,3],|x,y| x != y && ((x % y) !=  0 ) );
+        let t2: Vec<Ty> = n.iter().map(|x| *x).collect();
+        assert_eq!(t2,[2, 7, 6, 12, 11, 101, 77]);
+    }
 }
