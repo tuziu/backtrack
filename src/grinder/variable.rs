@@ -1,4 +1,4 @@
-use crate::grinder::domain::Domain;
+use crate::grinder::{domain::Domain, var_des::VarDes};
 
 pub type EnTy = i32;
 pub type VarId = usize;
@@ -10,11 +10,11 @@ pub struct Variable<T> {
     id: VarId,
 }
 
-impl<T> Variable<T> {
-    pub fn new(t: T, d: Vec<EnTy>,i: usize) -> Variable<T> {
+impl<T: VarDes> Variable<T> {
+    pub fn new(t: T, d: Vec<EnTy>, i: usize) -> Variable<T> {
         Variable {
             state: t,
-            id : i,
+            id: i,
             domain: Domain::new(d),
         }
     }
@@ -22,7 +22,7 @@ impl<T> Variable<T> {
     pub fn get_state(&self) -> &T {
         &self.state
     }
-    pub fn get_domain(&self) -> &Domain  {
+    pub fn get_domain(&self) -> &Domain {
         &self.domain
     }
 
@@ -42,11 +42,16 @@ impl<T> Variable<T> {
     //     None
     // }
 
-    pub fn get_idJ(&self) -> VarId{
+    pub fn get_id(&self) -> VarId {
         self.id
     }
 
     // pub fn set_domain_value(&mut self, val: EnTy){
     //     self.domain = vec![val];
     // }
+    pub fn revise(&self, other: &Self) -> bool {
+        self.domain.revise(other.get_domain(), |x, y| {
+            self.state.is_valid(&other.state, *x, *y)
+        })
+    }
 }

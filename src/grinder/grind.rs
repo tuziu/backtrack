@@ -2,7 +2,7 @@ use std::collections::{HashMap, VecDeque};
 
 use crate::grinder::{config_tank::ConfigTank, domain::Domain, var_des::VarDes, variable::EnTy};
 use crate::grinder::{
-    variable::{VarId, Variable},
+    variable::{VarId},
 };
 
 // fn check<T: VarDes>(ct: &ConfigTank<T>, val: EnTy, pos: usize) -> bool {
@@ -59,17 +59,17 @@ fn generate(qeue: &mut VecDeque<(usize, usize)>, from: usize, to: usize) {
     }
 }
 
-// fn arc_consistency<T: VarDes>(ct: &ConfigTank<T>, pos: usize) -> bool {
-//     let mut q = VecDeque::new();
-//     generate(&mut q, pos, ct.get_variables().len());
-//     while let Some((vk, vm)) = q.pop_front() {
-//         if revise(ct.get_variable(vk), ct.get_variable(vm)) {
-//             if ct.get_domain(vk).is_empty() {
-//                 return false;
-//             } else {
-//                 generate(&mut q, vk, ct.get_variables().len());
-//             }
-//         }
-//     }
-//     true
-// }
+fn arc_consistency<T: VarDes>(ct: &ConfigTank<T>, pos: usize) -> bool {
+    let mut q = VecDeque::new();
+    generate(&mut q, pos, ct.get_variables().len());
+    while let Some((vk, vm)) = q.pop_front() {
+        if ct.get_variable(vk).revise( ct.get_variable(vm)) {
+            if ct.get_domain(vk).is_empty() {
+                return false;
+            } else {
+                generate(&mut q, vk, ct.get_variables().len());
+            }
+        }
+    }
+    true
+}

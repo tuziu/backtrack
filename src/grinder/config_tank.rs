@@ -1,11 +1,11 @@
-use crate::grinder::{domain::Domain, variable::{Variable}};
+use crate::grinder::{domain::Domain, var_des::VarDes, variable::{Variable}};
 
 pub struct ConfigTank<T> {
     variables: Vec<Variable<T>>,
     // domains
 }
 
-impl<T> ConfigTank<T> {
+impl<T : VarDes> ConfigTank<T> {
     pub fn new(variables: Vec<Variable<T>>) -> ConfigTank<T> {
         ConfigTank { variables }
     }
@@ -17,7 +17,7 @@ impl<T> ConfigTank<T> {
     }
 
     pub fn get_domain(&self, pos: usize) -> &Domain {
-        &self.variables[pos].get_domain()
+        &self.get_variable(pos).get_domain()
     }
 
     // pub fn apply_unary(&mut self,v : &Vec<(usize,usize,EnTy)>){
