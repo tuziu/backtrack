@@ -1,12 +1,4 @@
-use mylib::{
-    grinder::{
-        config_tank::ConfigTank,
-        config_tank_builder::{add_variable, ConfigTankBuilder},
-        grind::allocate,
-        variable::{EnTy, Variable},
-    },
-    sudoku::SudokuVar,
-};
+use mylib::{grinder::{config_tank::ConfigTank, config_tank_builder::{add_variable, ConfigTankBuilder}, grind::{allocate, arc_consistency}, variable::{EnTy, Variable}}, queens::{QueensVar, pritn_variables}, sudoku::{SudokuVar, pritn_variables1}};
 
 #[macro_use]
 extern crate log;
@@ -48,9 +40,12 @@ fn setup_logger() -> Result<(), fern::InitError> {
 fn main() {
     let _ = setup_logger();
     let mut b = ConfigTankBuilder::new();
-    for i in 0..81 {
-        add_variable(SudokuVar::new(i / 9, i % 9))
-            .with_domain((0..9).map(|i| i as EnTy).collect())
+        add_variable(SudokuVar::new(0,0 ))
+    .with_domain((0..1).map(|i| i as EnTy).collect())
+    .to(&mut b);
+    for i in 1..9 {
+        add_variable(SudokuVar::new(i / 3, i % 3))
+            .with_domain((0..3).map(|i| i as EnTy).collect())
             .to(&mut b);
     }
 
@@ -84,8 +79,23 @@ fn main() {
     // ];
 
     // mill.apply_unary(&v);
-    let a = allocate(&mut mill);
-    if a {
-        print_solution(mill.get_variables())
-    }
+    // let a = allocate(&mut mill);
+    // if a {
+    //     print_solution(mill.get_variables())
+    // }
+
+    // let mut b = ConfigTankBuilder::new();
+    // // add_variable(QueensVar::new(0 ))
+    // // .with_domain((1..2).map(|i| i as EnTy).collect())
+    // // .to(&mut b);
+    // for i in 0..4 {
+    //     add_variable(QueensVar::new(i ))
+    //         .with_domain((0..4).map(|i| i as EnTy).collect())
+    //         .to(&mut b);
+    // }
+
+    // let mut mill = b.finalize();
+
+    let t = arc_consistency(&mill, 0);
+    pritn_variables1(&mill);
 }

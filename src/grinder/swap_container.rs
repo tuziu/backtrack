@@ -37,7 +37,7 @@ impl SwapContainer {
         self.data[0..self.count].iter()
     }
 
-    fn get_slice(&self) -> &[Ty] {
+    pub fn get_slice(&self) -> &[Ty] {
         &self.data[0..self.count]
     }
 
@@ -83,6 +83,10 @@ impl SwapContainer {
 
     fn collect(&self) -> Vec<Ty> {
         self.iter().cloned().collect()
+    }
+
+    pub fn print(&self) {
+        println!("{:?} ", &self.data[0..self.count]);
     }
 }
 
@@ -158,7 +162,7 @@ mod tests {
     fn revise_1() {
         let a = vec![2, 7, 6, 12, 11, 101, 77];
         let mut n = SwapContainer::new(a);
-        let i = n.revise_i(&[0, 3], |x, y| x != y);
+        let i = n.revise_i(&[0, 3], |x, y| x != y); //dzieli bez reszty
         assert_same_Values(&n.collect(), &[2, 7, 6, 12, 11, 101, 77]);
     }
 
@@ -166,7 +170,7 @@ mod tests {
     fn revise_2() {
         let a = vec![2, 7, 6, 12, 11, 101, 77];
         let mut n = SwapContainer::new(a);
-        let i = n.revise_i(&[2, 3], |x, y| x != y && ((x % y) != 0));
+        let i = n.revise_i(&[2, 3], |x, y| x != y && ((x % y) != 0));//dzieli bez  z reszta
         assert_same_Values(&n.collect(), &[2, 7, 11, 101, 77]);
     }
 }
