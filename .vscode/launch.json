@@ -31,7 +31,8 @@
                     "test",
                     "--no-run",
                     "--bin=backtrack",
-                    "--package=backtrack"
+                    "--package=backtrack",
+                    "dupa",
                 ],
                 "filter": {
                     "name": "backtrack",

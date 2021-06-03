@@ -1,4 +1,13 @@
-use mylib::{grinder::{config_tank::ConfigTank, config_tank_builder::{add_variable, ConfigTankBuilder}, grind::{allocate, arc_consistency}, variable::{EnTy, Variable}}, queens::{QueensVar, pritn_variables}, sudoku::{SudokuVar, pritn_variables1}};
+use mylib::{
+    grinder::{
+        config_tank::ConfigTank,
+        config_tank_builder::{add_variable, ConfigTankBuilder},
+        grind::{allocate, arc_consistency},
+        variable::{EnTy, Variable},
+    },
+    queens::{pritn_variables, QueensVar},
+    sudoku::{pritn_variables1, SudokuVar},
+};
 
 #[macro_use]
 extern crate log;
@@ -40,9 +49,9 @@ fn setup_logger() -> Result<(), fern::InitError> {
 fn main() {
     let _ = setup_logger();
     let mut b = ConfigTankBuilder::new();
-        add_variable(SudokuVar::new(0,0 ))
-    .with_domain((0..1).map(|i| i as EnTy).collect())
-    .to(&mut b);
+    add_variable(SudokuVar::new(0, 0))
+        .with_domain((0..1).map(|i| i as EnTy).collect())
+        .to(&mut b);
     for i in 1..9 {
         add_variable(SudokuVar::new(i / 3, i % 3))
             .with_domain((0..3).map(|i| i as EnTy).collect())

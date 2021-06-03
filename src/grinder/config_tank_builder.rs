@@ -1,5 +1,5 @@
-use crate::grinder::{var_des::VarDes, variable::Variable};
 use crate::grinder::{config_tank::ConfigTank, variable::EnTy};
+use crate::grinder::{var_des::VarDes, variable::Variable};
 
 pub struct ConfigTankBuilder<T: Copy> {
     vars: Vec<(T, Vec<EnTy>)>,
@@ -42,7 +42,7 @@ pub struct DomainBuilder<T: Copy> {
     d: Vec<EnTy>,
 }
 
-impl<T: Copy+ VarDes> DomainBuilder<T> {
+impl<T: Copy + VarDes> DomainBuilder<T> {
     pub fn to(self, cb: &mut ConfigTankBuilder<T>) {
         cb.add_variable(self.t, self.d)
     }
@@ -50,7 +50,6 @@ impl<T: Copy+ VarDes> DomainBuilder<T> {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
 
     // #[test]
     // fn llll() {

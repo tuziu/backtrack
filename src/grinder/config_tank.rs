@@ -1,11 +1,11 @@
-use crate::grinder::{domain::Domain, var_des::VarDes, variable::{Variable}};
+use crate::grinder::{domain::Domain, var_des::VarDes, variable::Variable};
 
 pub struct ConfigTank<T> {
     variables: Vec<Variable<T>>,
     // domains
 }
 
-impl<T : VarDes> ConfigTank<T> {
+impl<T: VarDes> ConfigTank<T> {
     pub fn new(variables: Vec<Variable<T>>) -> ConfigTank<T> {
         ConfigTank { variables }
     }

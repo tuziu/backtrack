@@ -1,9 +1,7 @@
 use std::collections::{HashMap, VecDeque};
 
+use crate::grinder::variable::VarId;
 use crate::grinder::{config_tank::ConfigTank, domain::Domain, var_des::VarDes, variable::EnTy};
-use crate::grinder::{
-    variable::{VarId},
-};
 
 // fn check<T: VarDes>(ct: &ConfigTank<T>, val: EnTy, pos: usize) -> bool {
 fn check<T: VarDes>(
@@ -53,7 +51,7 @@ fn allocate_at<T: VarDes>(
 }
 
 fn generate(qeue: &mut VecDeque<(usize, usize)>, from: usize, to: usize) {
-    for i in (from+1)..to {
+    for i in (from + 1)..to {
         qeue.push_back((from, i));
         qeue.push_back((i, from));
     }
@@ -63,11 +61,10 @@ pub fn arc_consistency<T: VarDes>(ct: &ConfigTank<T>, pos: usize) -> bool {
     let mut q = VecDeque::new();
     generate(&mut q, pos, ct.get_variables().len());
     while let Some((vk, vm)) = q.pop_front() {
-        if ct.get_variable(vk).revise( ct.get_variable(vm)) {
+        if ct.get_variable(vk).revise(ct.get_variable(vm)) {
             if ct.get_domain(vk).is_empty() {
                 return false;
-            } 
-            else {
+            } else {
                 generate(&mut q, vk, ct.get_variables().len());
             }
         }
@@ -80,8 +77,6 @@ mod tests {
     use std::{collections::VecDeque, fmt::Debug};
 
     use crate::grinder::grind::generate;
-
-
 
     fn assert_same_Values<Ty>(left: &[Ty], right: &[Ty]) -> bool
     where
@@ -103,15 +98,12 @@ mod tests {
     #[test]
     fn arc_cons() {
         let a = vec![2, 220, 50, 17];
-
     }
 
     #[test]
     fn arc_cons1() {
         let mut q = VecDeque::new();
         generate(&mut q, 0, 5);
-        assert_eq!(q , []);
-
+        assert_eq!(q, []);
     }
-    
 }
